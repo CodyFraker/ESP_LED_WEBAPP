@@ -23,11 +23,61 @@
 
 
 /* MSC18-C. Be careful while handling sensitive data, such as passwords, in program code */
+/* Matt- Reading into it these are fine due to it not being put into blatently run code 
+if it were to be just thrown into something like:
+WiFi.begin(ssid, password);
+
+We would have an issue.
+In the https://wiki.sei.cmu.edu/confluence/display/java/MSC03-J.+Never+hard+code+sensitive+information
+It says this is a bad 
+
+public final Connection getConnection() throws SQLException {
+  return DriverManager.getConnection(
+      "jdbc:mysql://localhost/dbName",
+      "username", "password");
+}
+and this:
+
+public final Connection getConnection() throws SQLException {
+  String username;
+  String password;
+  // Username and password are read at runtime from a secure config file
+  return DriverManager.getConnection(
+      "jdbc:mysql://localhost/dbName", username, password);
+}
+This is fine.
+So for the most part declaring the variable here is fine. Using them blatently later is a no no
+  */
 const char* ssid = "qwerty"; // SSID - your WiFi's name 
 const char* password = "password5"; // Password 
 const char* device_name = "led"; // you can access controller by http://led.local/
 
 /* MSC03-J. Never hard code sensitive information */
+/* Matt- Reading into it these are fine due to it not being put into blatently run code 
+if it were to be just thrown into something like:
+WiFi.config(ip, gateway, subnet);
+  
+We would have an issue.
+In the https://wiki.sei.cmu.edu/confluence/display/java/MSC03-J.+Never+hard+code+sensitive+information
+It says this is a bad 
+
+public final Connection getConnection() throws SQLException {
+  return DriverManager.getConnection(
+      "jdbc:mysql://localhost/dbName",
+      "username", "password");
+}
+and this:
+
+public final Connection getConnection() throws SQLException {
+  String username;
+  String password;
+  // Username and password are read at runtime from a secure config file
+  return DriverManager.getConnection(
+      "jdbc:mysql://localhost/dbName", username, password);
+}
+This is fine.
+So for the most part declaring the variable here is fine. Using them blatently later is a no no
+  */
 IPAddress ip(192,168,1,111);  // static IP adress of device
 IPAddress gateway(192,168,1,1); // Gatway
 IPAddress subnet(255,255,255,0); // Network mask
@@ -35,6 +85,16 @@ IPAddress subnet(255,255,255,0); // Network mask
 /* Objects */
 MDNSResponder mdns;
 /* MSC00-J. Use SSLSocket rather than Socket for secure data exchange */
+/* I have looked up multiple examples on how arduino seems to code to host a web server
+All of the examples all have their code formated this way
+https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WebServer/examples/HelloServer/HelloServer.ino
+https://www.arduino.cc/en/Tutorial/WiFiWebServer
+
+I have actually not found a secure version of the hosting code in the slightest
+the best I found was a client connection, which this code is about hosting a web server
+https://www.arduino.cc/en/Reference/WiFi101SSLClient
+
+Everything I have found and read has pointed this to being set up as intended. So I feel obligated to leave it as is*/
 ESP8266WebServer server(80);
 
 String webPage = R"=====(
